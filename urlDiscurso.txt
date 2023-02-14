@@ -1,0 +1,6 @@
+Github Repo - https://github.com/amigoscode/microservices
+
+Diagram https://raw.githubusercontent.com/amigoscode/microservices/78d93c2caa7274951ff5258e5414a59b870f50a9/diagrams.drawio
+Save with .drawio file extension
+open it with https://www.diagrams.net/
+

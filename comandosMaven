@@ -1,0 +1,9 @@
+Inicio del proyecto
+
+mvn archetype:generate \
+-DgroupId=com.amigoscode \
+-DartifactId=amigosservices \
+-DarchetypeArtifactId=maven-archetype-quickstart \
+-DarchetypeVersion=1.4 \
+-DinteractiveMode=false
+
