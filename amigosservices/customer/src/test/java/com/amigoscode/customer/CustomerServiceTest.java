@@ -9,7 +9,6 @@ import org.mockito.MockitoAnnotations;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.then;
-import static org.junit.jupiter.api.Assertions.*;
 
 class CustomerServiceTest {
 
