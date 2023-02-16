@@ -7,3 +7,9 @@ mvn archetype:generate \
 -DarchetypeVersion=1.4 \
 -DinteractiveMode=false
 
+
+mvn install:install-file -Dfile=gobiernoapis/validacionjwt/src/main/resources/gobierno-apis-seguridad-v1-0.1.5-RELEASE.jar \
+-DgroupId=com.gobierno.apis.seguridad \
+-DartifactId=gobierno-apis-seguridad-v1 \         
+-Dversion=0.1.5-RELEASE \
+-Dpackaging=jar
