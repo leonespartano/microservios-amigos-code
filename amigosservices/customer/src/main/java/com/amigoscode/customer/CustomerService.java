@@ -1,7 +1,8 @@
 package com.amigoscode.customer;
 
+import com.amigoscode.clients.fraud.FraudCheckResponse;
+import com.amigoscode.clients.fraud.FraudClient;
 import lombok.AllArgsConstructor;
-import org.mockito.ArgumentCaptor;
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 public class CustomerService {
 
     private CustomerRepository customerRepository;
+    private final FraudClient fraudClient;
 
     public void registerCustomer(CustomerRegistrationRequest request){
         Customer customer = Customer.builder()
@@ -17,7 +19,12 @@ public class CustomerService {
                 .email(request.email())
                 .build();
 
-        customerRepository.save(customer);
+        customerRepository.saveAndFlush(customer);
 
+        FraudCheckResponse fraudCheckResponse = fraudClient.isFraudster(customer.getId());
+
+        if (fraudCheckResponse.isFraudster()){
+            throw new IllegalStateException("fraudster");
+        }
     }
 }

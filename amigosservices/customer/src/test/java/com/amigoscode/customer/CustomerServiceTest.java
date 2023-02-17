@@ -1,5 +1,7 @@
 package com.amigoscode.customer;
 
+import com.amigoscode.clients.fraud.FraudCheckResponse;
+import com.amigoscode.clients.fraud.FraudClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -17,13 +19,15 @@ class CustomerServiceTest {
     @Mock
     private CustomerRepository customerRepository;
 
+    private FraudClient fraudClient;
+
     @Captor
     private ArgumentCaptor<Customer> argumentCaptorCustomer;
 
     @BeforeEach
     void setUp()  {
         MockitoAnnotations.initMocks(this);;
-        underTest = new CustomerService(customerRepository);
+        underTest = new CustomerService(customerRepository, fraudClient);
     }
 
     @Test
