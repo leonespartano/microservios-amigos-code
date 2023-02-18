@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class CustomerService {
 
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
     private final FraudClient fraudClient;
 
     public void registerCustomer(CustomerRegistrationRequest request){
