@@ -13,10 +13,10 @@ import static org.assertj.core.api.Assertions.assertThat;
                 "spring.jpa.properties.javax.persistence.validation.mode=none"
         }
 )
-class NoticationRepositoryTest {
+class NotificationRepositoryTest {
 
     @Autowired
-    private NoticationRepository underTest;
+    private NotificationRepository underTest;
 
 
     @Test
