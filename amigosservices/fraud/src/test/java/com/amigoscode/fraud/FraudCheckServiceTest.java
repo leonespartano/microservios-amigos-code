@@ -32,13 +32,14 @@ class FraudCheckServiceTest {
         //Given
         int customerId = 1;
         //When
-        underTest.isFraudulentCustomer(customerId);
+        boolean result = underTest.isFraudulentCustomer(customerId);
         //Then
         then(fraudCheckHistoryRepository).should().save(captureFraudCheckHistory.capture());
 
         FraudCheckHistory fraudCheckHistoryValue = captureFraudCheckHistory.getValue();
 
         assertThat(fraudCheckHistoryValue.getCustomerId()).isEqualTo(customerId);
+        assertThat(result).isFalse();
 
     }
 }
