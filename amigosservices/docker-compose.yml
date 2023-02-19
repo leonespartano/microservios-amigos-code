@@ -29,12 +29,12 @@ services:
       - postgres
     restart: unless-stopped
 
-#  zipkin:
-#    image: openzipkin/zipkin
-#    container_name: zipkin
-#    # Environment settings are defined here https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#environment-variables
-#    ports:
-#      - "9411:9411"
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    # Environment settings are defined here https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#environment-variables
+    ports:
+      - "9411:9411"
 
 networks:
   postgres:
