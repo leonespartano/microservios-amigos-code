@@ -1,5 +1,6 @@
 package com.amigoscode.customer;
 
+import com.amigoscode.amqp.RabbitMQMessageProducer;
 import com.amigoscode.clients.fraud.FraudCheckResponse;
 import com.amigoscode.clients.fraud.FraudClient;
 import com.amigoscode.clients.notification.NotificationClient;
@@ -29,7 +30,7 @@ class CustomerServiceTest {
     private FraudClient fraudClient;
 
     @Mock
-    private NotificationClient notificationClient;
+    private RabbitMQMessageProducer rabbitMQMessageProducer;
 
     @Captor
     private ArgumentCaptor<Customer> argumentCaptorCustomer;
@@ -40,7 +41,7 @@ class CustomerServiceTest {
     @BeforeEach
     void setUp()  {
         MockitoAnnotations.initMocks(this);;
-        underTest = new CustomerService(customerRepository, fraudClient, notificationClient);
+        underTest = new CustomerService(customerRepository, fraudClient, rabbitMQMessageProducer);
     }
 
     @Test
@@ -63,8 +64,6 @@ class CustomerServiceTest {
         given(fraudClient.isFraudster(customerTest.getId()))
                 .willReturn(new FraudCheckResponse(false));
 
-        given(notificationClient.receiveNotification(notificationRequestArgumentCaptor.capture()))
-                .willReturn(new NotificationResponse(true));
 
         // When
         underTest.registerCustomer(request);
@@ -128,8 +127,6 @@ class CustomerServiceTest {
         given(fraudClient.isFraudster(customerTest.getId()))
                 .willReturn(new FraudCheckResponse(false));
 
-        given(notificationClient.receiveNotification(notificationRequestArgumentCaptor.capture()))
-                .willReturn(new NotificationResponse(false));
 
         // When
         // Then

@@ -1,5 +1,6 @@
 package com.amigoscode.customer;
 
+import com.amigoscode.amqp.RabbitMQMessageProducer;
 import com.amigoscode.clients.fraud.FraudCheckResponse;
 import com.amigoscode.clients.fraud.FraudClient;
 import com.amigoscode.clients.notification.NotificationClient;
@@ -15,7 +16,7 @@ public class CustomerService {
 
     private final CustomerRepository customerRepository;
     private final FraudClient fraudClient;
-    private final NotificationClient notificationClient;
+    private final RabbitMQMessageProducer rabbitMQMessageProducer;
 
     public void registerCustomer(CustomerRegistrationRequest request){
         Customer customer = Customer.builder()
@@ -32,16 +33,17 @@ public class CustomerService {
             throw new IllegalStateException("fraudster");
         }
 
-        NotificationResponse notificationResponse = notificationClient.receiveNotification(
-                new NotificationRequest(
-                        customer.getId(),
-                        customer.getEmail(),
-                        "message send"
-                )
+        // todo: make it async. i.e add to queue
+        NotificationRequest notificationRequest = new NotificationRequest(
+                customer.getId(),
+                customer.getEmail(),
+                "message send"
         );
 
-        if(!notificationResponse.isReceive()){
-            throw new IllegalStateException("Notification is not sent");
-        }
+        rabbitMQMessageProducer.publish(
+                notificationRequest,
+                "internal.exchange",
+                "internal.notification.routing-key"
+        );
     }
 }
