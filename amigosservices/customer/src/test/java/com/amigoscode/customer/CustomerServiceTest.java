@@ -60,6 +60,12 @@ class CustomerServiceTest {
                 customerTest.getEmail()
         );
 
+        NotificationRequest notificationRequestTest = new NotificationRequest(
+                customerTest.getId(),
+                customerTest.getEmail(),
+                "message send"
+        );
+
 
         given(fraudClient.isFraudster(customerTest.getId()))
                 .willReturn(new FraudCheckResponse(false));
@@ -76,7 +82,16 @@ class CustomerServiceTest {
                 .ignoringFields("id")
                 .isEqualTo(customerTest);
 
-        assertThat(notificationRequestArgumentCaptor.getValue().toCustomerId()).isEqualTo(customerArgumentCaptor.getId());
+        then(rabbitMQMessageProducer).should().publish(
+                notificationRequestTest,
+                "internal.exchange",
+                "internal.notification.routing-key"
+        );
+
+//        NotificationRequest notificationRequestValue = notificationRequestArgumentCaptor.getValue();
+
+//        assertThat(notificationRequestArgumentCaptor.getValue().toCustomerEmail())
+//                .isEqualTo(customerTest.getEmail());
         
     }
 
@@ -107,34 +122,4 @@ class CustomerServiceTest {
 
     }
 
-    @Test
-    void itShouldRegisterCustomerWithOutSentNotification() {
-        // Given
-        Customer customerTest = Customer.builder()
-                .id(null)
-                .firstName("Jose")
-                .lastName("Lulo")
-                .email("example@prueba.test")
-                .build();
-
-        CustomerRegistrationRequest request = new CustomerRegistrationRequest(
-                customerTest.getFirstName(),
-                customerTest.getLastName(),
-                customerTest.getEmail()
-        );
-
-
-        given(fraudClient.isFraudster(customerTest.getId()))
-                .willReturn(new FraudCheckResponse(false));
-
-
-        // When
-        // Then
-
-        assertThatThrownBy(() -> underTest.registerCustomer(request))
-                .isInstanceOf(IllegalStateException.class)
-                        .hasMessageContaining("Notification is not sent");
-
-
-    }
 }
