@@ -1,3 +1,4 @@
+version: '3.8'
 services:
   postgres:
     container_name: postgres
@@ -35,19 +36,95 @@ services:
     # Environment settings are defined here https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#environment-variables
     ports:
       - "9411:9411"
+    networks:
+      - spring
 
-  # rabbitmq:
-  #   image: rabbitmq:3.9.11-management-alpine
-  #   container_name: rabbitmq
-  #   # Environment settings are defined here https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#environment-variables
-  #   ports:
-  #     - "5672:5672"
-  #     - "15672:15672"
 
-networks:
-  postgres:
-    driver: bridge
+  eureka-server:
+    image: leonespartano/eureka-server:latest
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+    depends_on:
+      - zipkin
+
+  apigw:
+    image: leonespartano/apigw:latest
+    container_name: apigw
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+    depends_on:
+      - zipkin
+      - eureka-server
+
+  customer:
+    image: leonespartano/customer:latest
+    container_name: customer
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - postgres
+    extra_hosts:
+      - "juanramon:172.17.0.1"
+    depends_on:
+      - zipkin
+      - postgres
+      - eureka-server
+
+  fraud:
+    image: leonespartano/fraud:latest
+    container_name: fraud
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - postgres
+    depends_on:
+      - zipkin
+      - postgres
+      - eureka-server
+
+  notification:
+    image: leonespartano/notification:latest
+    container_name: notification
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - spring
+      - postgres
+    extra_hosts:
+      - "juanramon:172.17.0.1"
+    depends_on:
+      - zipkin
+      - postgres
+      - eureka-server
 
 volumes:
   postgres:
+    name: postgres
   pgadmin:
+    name: pgadmin
+
+networks:
+  postgres:
+    name: postgres
+    driver: bridge
+  spring:
+    name: spring
+    driver: bridge
+
