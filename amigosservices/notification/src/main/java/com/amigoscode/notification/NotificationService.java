@@ -21,6 +21,7 @@ public class NotificationService {
                 .sentAt(LocalDateTime.now())
                 .build();
         notificationRepository.save(notification);
+        System.out.println();
         return true;
     }
 

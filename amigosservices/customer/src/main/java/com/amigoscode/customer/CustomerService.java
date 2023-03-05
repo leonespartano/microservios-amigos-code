@@ -25,11 +25,11 @@ public class CustomerService {
 
         customerRepository.saveAndFlush(customer);
 
-        FraudCheckResponse fraudCheckResponse = fraudClient.isFraudster(customer.getId());
-
-        if (fraudCheckResponse.isFraudster()){
-            throw new IllegalStateException("fraudster");
-        }
+//        FraudCheckResponse fraudCheckResponse = fraudClient.isFraudster(customer.getId());
+//
+//        if (fraudCheckResponse.isFraudster()){
+//            throw new IllegalStateException("fraudster");
+//        }
 
         // todo: make it async. i.e add to queue
         NotificationRequest notificationRequest = new NotificationRequest(

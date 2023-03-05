@@ -8,18 +8,18 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 
 @SpringBootApplication(
-//        scanBasePackages = {
-//                "com.amigoscode.customer",
-//                "com.amigoscode.kafka",
-//        }
+        scanBasePackages = {
+                "com.amigoscode.customer",
+                "com.amigoscode.kafka",
+        }
 )
 @EnableEurekaClient
 @EnableFeignClients(
         basePackages = "com.amigoscode.clients"
 )
-//@PropertySources({
-//        @PropertySource("classpath:kafka-${spring.profiles.active}.properties")
-//})
+@PropertySources({
+        @PropertySource("classpath:kafka-${spring.profiles.active}.properties")
+})
 public class CustomerApplication {
 
     public static void main(String[] args) {
