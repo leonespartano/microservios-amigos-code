@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: notification
+    spec:
+      hostAliases:
+        - ip: "10.0.2.4"
+          hostnames:
+          - "juanramon"
+      containers:
+      - name: notification
+        image: leonespartano/notification:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8082
+        env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: kube
+      restartPolicy: Always
+       
+  selector:
+    matchLabels:
+      app: notification
